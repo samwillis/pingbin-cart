@@ -8,6 +8,7 @@ import {
   createTrackCurve,
   point3DToVector3
 } from '../utils/TrackUtils';
+import TouchControls from '../components/TouchControls';
 
 // Track component for the racing circuit
 const Track = ({ trackId = 'main_track' }: { trackId?: string }) => {
@@ -366,10 +367,14 @@ const Environment = () => {
 // Main game scene component
 export const GameScene = ({ 
   character = 'pingbin',
-  trackId = 'main_track'
+  trackId = 'main_track',
+  showTouchControls = false,
+  onPause
 }: { 
   character?: 'pingbin' | 'bunny',
-  trackId?: string
+  trackId?: string,
+  showTouchControls?: boolean,
+  onPause?: () => void
 }) => {
   const trackData = loadTrack(trackId);
   const startPos = trackData?.startPosition || { x: 0, y: 0, z: -45 };
@@ -389,6 +394,24 @@ export const GameScene = ({
     setPlayerRotation(rotation);
   };
   
+  // Handler for touch controls
+  const handleTouchControl = (control: string, isPressed: boolean) => {
+    setControls(prev => {
+      switch (control) {
+        case 'forward':
+          return { ...prev, forward: isPressed };
+        case 'backward':
+          return { ...prev, backward: isPressed };
+        case 'left':
+          return { ...prev, left: isPressed };
+        case 'right':
+          return { ...prev, right: isPressed };
+        default:
+          return prev;
+      }
+    });
+  };
+  
   // Set up keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -403,6 +426,9 @@ export const GameScene = ({
       }
       if (e.key === 'ArrowRight' || e.key === 'd') {
         setControls(prev => ({ ...prev, right: true }));
+      }
+      if (e.key === 'Escape' && onPause) {
+        onPause();
       }
     };
     
@@ -428,23 +454,28 @@ export const GameScene = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
+  }, [onPause]);
 
   return (
-    <Canvas shadows>
-      <PerspectiveCamera makeDefault position={[0, 5, -10]} fov={75} />
-      <FollowCamera target={playerPosition.current} rotation={playerRotation} />
-      <Environment />
-      <CheckeredGround />
-      <Track trackId={trackId} />
-      <Vehicle 
-        position={[startPos.x, startPos.y, startPos.z]} 
-        controls={controls}
-        character={character}
-        trackId={trackId}
-        onPositionChange={handlePositionChange}
-      />
-    </Canvas>
+    <>
+      <Canvas shadows>
+        <PerspectiveCamera makeDefault position={[0, 5, -10]} fov={75} />
+        <FollowCamera target={playerPosition.current} rotation={playerRotation} />
+        <Environment />
+        <CheckeredGround />
+        <Track trackId={trackId} />
+        <Vehicle 
+          position={[startPos.x, startPos.y, startPos.z]} 
+          controls={controls}
+          character={character}
+          trackId={trackId}
+          onPositionChange={handlePositionChange}
+        />
+      </Canvas>
+      
+      {/* Touch controls for mobile/tablet devices, only if enabled */}
+      {showTouchControls && <TouchControls onControlChange={handleTouchControl} />}
+    </>
   );
 };
 

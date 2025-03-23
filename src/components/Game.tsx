@@ -1,74 +1,108 @@
 import { useState, useEffect } from 'react';
-import GameScene from '../scenes/GameScene';
-import Menu from './Menu';
-import '../styles/Game.css';
+import { GameScene } from '../scenes/GameScene';
 import { loadAllTracks } from '../utils/TrackUtils';
+import '../styles/Game.css';
 
-type GameState = 'menu' | 'characterSelect' | 'trackSelect' | 'playing' | 'paused' | 'gameOver';
+// Game states
+type GameState = 'character_select' | 'track_select' | 'playing' | 'paused' | 'settings';
 type Character = 'pingbin' | 'bunny';
 
-export const Game = () => {
-  const [gameState, setGameState] = useState<GameState>('menu');
+function Game() {
+  const [gameState, setGameState] = useState<GameState>('character_select');
   const [selectedCharacter, setSelectedCharacter] = useState<Character>('pingbin');
   const [selectedTrackId, setSelectedTrackId] = useState('main_track');
+  const [showTouchControls, setShowTouchControls] = useState<boolean>(false);
   
-  // Get all available tracks
   const tracks = loadAllTracks();
-  
-  const handleStartGame = () => {
-    setGameState('characterSelect');
-  };
-  
+
+  // Check if the device is mobile/tablet on initial load
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone/.test(userAgent);
+    setShowTouchControls(isMobileDevice || window.innerWidth <= 1024);
+  }, []);
+
+  // Handle character selection
   const handleCharacterSelect = (character: Character) => {
     setSelectedCharacter(character);
-    setGameState('trackSelect');
+    setGameState('track_select');
   };
-  
+
+  // Handle track selection
   const handleTrackSelect = (trackId: string) => {
     setSelectedTrackId(trackId);
     setGameState('playing');
   };
-  
-  const handlePauseGame = () => {
+
+  // Handle pause
+  const handlePause = () => {
     if (gameState === 'playing') {
       setGameState('paused');
-    } else if (gameState === 'paused') {
+    }
+  };
+
+  // Handle resume
+  const handleResume = () => {
+    if (gameState === 'paused') {
       setGameState('playing');
     }
   };
-  
+
+  // Handle settings toggle
   const handleSettings = () => {
-    // For now, this just returns to the main menu
-    setGameState('menu');
+    if (gameState === 'paused') {
+      setGameState('settings');
+    } else if (gameState === 'settings') {
+      setGameState('paused');
+    }
   };
-  
-  // Set up keyboard listener for pause
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && (gameState === 'playing' || gameState === 'paused')) {
-        handlePauseGame();
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [gameState]);
-  
+
+  // Handle main menu
+  const handleMainMenu = () => {
+    setGameState('character_select');
+  };
+
   return (
     <div className="game-container">
-      <GameScene character={selectedCharacter} trackId={selectedTrackId} />
-      
-      {gameState === 'menu' && (
-        <Menu 
-          onStartGame={handleStartGame} 
-          onSettings={handleSettings} 
+      {gameState === 'playing' && (
+        <GameScene 
+          character={selectedCharacter} 
+          trackId={selectedTrackId}
+          showTouchControls={showTouchControls}
+          onPause={handlePause}
         />
       )}
 
-      {gameState === 'characterSelect' && (
+      {gameState === 'paused' && (
+        <div className="pause-overlay">
+          <div className="pause-menu">
+            <h2>Game Paused</h2>
+            <button onClick={handleResume}>Resume</button>
+            <button onClick={handleSettings}>Settings</button>
+            <button onClick={handleMainMenu}>Main Menu</button>
+          </div>
+        </div>
+      )}
+
+      {gameState === 'settings' && (
+        <div className="pause-overlay">
+          <div className="settings-menu">
+            <h2>Settings</h2>
+            <div className="setting-option">
+              <label htmlFor="touch-controls">Touch Controls</label>
+              <input 
+                type="checkbox" 
+                id="touch-controls" 
+                checked={showTouchControls} 
+                onChange={() => setShowTouchControls(prev => !prev)}
+              />
+            </div>
+            <button onClick={handleSettings}>Back</button>
+          </div>
+        </div>
+      )}
+
+      {gameState === 'character_select' && (
         <div className="character-select-overlay">
           <div className="character-select">
             <h2>Select Your Character</h2>
@@ -91,8 +125,8 @@ export const Game = () => {
           </div>
         </div>
       )}
-      
-      {gameState === 'trackSelect' && (
+
+      {gameState === 'track_select' && (
         <div className="track-select-overlay">
           <div className="track-select">
             <h2>Select Track</h2>
@@ -116,19 +150,8 @@ export const Game = () => {
           </div>
         </div>
       )}
-      
-      {gameState === 'paused' && (
-        <div className="pause-overlay">
-          <div className="pause-menu">
-            <h2>Game Paused</h2>
-            <button onClick={handlePauseGame}>Resume</button>
-            <button onClick={handleSettings}>Settings</button>
-            <button onClick={() => setGameState('menu')}>Main Menu</button>
-          </div>
-        </div>
-      )}
     </div>
   );
-};
+}
 
 export default Game; 

@@ -192,4 +192,47 @@
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.settings-menu {
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 2rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+}
+
+.settings-menu h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.settings-menu button {
+  margin-top: 1.5rem;
+}
+
+.setting-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.setting-option label {
+  color: white;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+.setting-option input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 } 
