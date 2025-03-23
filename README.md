@@ -1,63 +1,77 @@
-# Pingbin Cart
+# Pingbin Cart 🏎️
 
-A 3D racing game inspired by Mario Kart, built with React, TypeScript, and Three.js.
+A fun 3D racing game built with React, Three.js, and React Three Fiber. Race around exciting tracks with Pingbin and Bunny characters!
 
-## Overview
+![Pingbin Cart Screenshot](screenshot.png)
 
-Pingbin Cart is a web-based racing game featuring a penguin character named Pingbin and a rabbit character named Bunny. Players can race around a 3D track using keyboard controls.
+## 🎮 Play Now
 
-## Features
+You can play the game online at: [https://[your-username].github.io/pingbin-cart/](https://[your-username].github.io/pingbin-cart/)
 
-- 3D racing gameplay with a simple oval track
-- Character selection (Pingbin the penguin or Bunny the rabbit)
-- Standard racing game controls
-- Menu system with start, pause, and settings options
-- Responsive design for different screen sizes
+## ✨ Features
 
-## Technology Stack
+- 3D racing gameplay with physics
+- Multiple race tracks with different layouts
+- Character selection (Pingbin and Bunny)
+- Customizable car colors
+- Track map navigation
+- Touch controls for mobile/tablet devices
+- Keyboard navigation
+- Pause menu and settings
 
-- **Frontend Framework**: React.js with TypeScript
-- **Build Tool**: Vite
-- **3D Graphics**: Three.js with React Three Fiber
-- **3D Helpers**: React Three Drei
+## 🚀 Getting Started
 
-## Installation
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
 
 1. Clone the repository:
-```bash
-git clone <repository_url>
-cd pingbin-cart
-```
+   ```bash
+   git clone https://github.com/[your-username]/pingbin-cart.git
+   cd pingbin-cart
+   ```
 
 2. Install dependencies:
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Start the development server:
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 4. Open your browser and navigate to `http://localhost:5173`
 
-## Game Controls
+## 🛠️ Build
 
-- **Forward**: W key or Up Arrow
-- **Backward**: S key or Down Arrow
-- **Turn Left**: A key or Left Arrow
-- **Turn Right**: D key or Right Arrow
-- **Pause Game**: ESC key
+```bash
+npm run build
+```
 
-## Future Enhancements
+The built files will be in the `dist` directory.
 
-- More complex track designs with hills and obstacles
-- Additional character options
-- Power-ups and special abilities
-- Multiplayer racing
-- Racing AI opponents
-- Scoring system and lap timing
+## 🧪 Type Checking
 
-## License
+```bash
+npm run typecheck
+```
+
+## 🧹 Linting
+
+```bash
+npm run lint
+```
+
+## 📝 License
 
 MIT
+
+## 🙏 Acknowledgments
+
+- Three.js - 3D rendering library
+- React Three Fiber - React renderer for Three.js
+- Vite - Fast development environment
