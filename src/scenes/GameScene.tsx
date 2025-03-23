@@ -151,7 +151,8 @@ const Vehicle = ({
   controls,
   character = 'pingbin',
   trackId = 'main_track',
-  onPositionChange
+  onPositionChange,
+  carColor = "#e01b24"
 }: { 
   position: [number, number, number],
   controls: {
@@ -162,7 +163,8 @@ const Vehicle = ({
   },
   character?: 'pingbin' | 'bunny',
   trackId?: string,
-  onPositionChange: (position: THREE.Vector3, rotation: number) => void
+  onPositionChange: (position: THREE.Vector3, rotation: number) => void,
+  carColor?: string
 }) => {
   const meshRef = useRef<THREE.Group>(null);
   const [velocity, setVelocity] = useState(0);
@@ -274,13 +276,13 @@ const Vehicle = ({
       {/* Car body */}
       <mesh castShadow position={[0, 0.5, 0]}>
         <boxGeometry args={[1.5, 0.5, 3]} />
-        <meshStandardMaterial color="#e01b24" />
+        <meshStandardMaterial color={carColor} />
       </mesh>
       
       {/* Car top */}
       <mesh castShadow position={[0, 1, -0.2]}>
         <boxGeometry args={[1.2, 0.4, 1.5]} />
-        <meshStandardMaterial color="#e01b24" />
+        <meshStandardMaterial color={carColor} />
       </mesh>
       
       {/* Wheels */}
@@ -369,12 +371,14 @@ export const GameScene = ({
   character = 'pingbin',
   trackId = 'main_track',
   showTouchControls = false,
-  onPause
+  onPause,
+  carColor = "#e01b24"
 }: { 
   character?: 'pingbin' | 'bunny',
   trackId?: string,
   showTouchControls?: boolean,
-  onPause?: () => void
+  onPause?: () => void,
+  carColor?: string
 }) => {
   const trackData = loadTrack(trackId);
   const startPos = trackData?.startPosition || { x: 0, y: 0, z: -45 };
@@ -506,6 +510,7 @@ export const GameScene = ({
           character={character}
           trackId={trackId}
           onPositionChange={handlePositionChange}
+          carColor={carColor}
         />
       </Canvas>
       

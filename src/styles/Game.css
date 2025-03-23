@@ -703,4 +703,141 @@ button {
   font-size: 2.3rem;
   letter-spacing: 1px;
   line-height: 1.2;
+}
+
+/* Car Color Select Screen */
+.car-color-select-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #6A11CB, #2575FC);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.car-color-select {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 800px;
+  border: 5px solid #2575FC;
+}
+
+.car-color-select h2 {
+  color: #6A11CB;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 #D1C4E9;
+}
+
+.car-preview {
+  height: 250px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 3px solid #ffe66d;
+}
+
+.car-preview-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.color-option {
+  width: 120px;
+  padding: 0.8rem;
+  background-color: #F8F9FA;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.color-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.color-option.selected {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border: 3px solid #2575FC;
+}
+
+.color-swatch {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  border: 2px solid #333;
+  transition: all 0.3s;
+}
+
+.color-option:hover .color-swatch {
+  transform: scale(1.1);
+}
+
+.color-option.selected .color-swatch {
+  transform: scale(1.1);
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #2575FC;
+}
+
+.color-option span {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #333;
 } 
+/* Select button for car color */
+.car-color-select .select-button {
+  background-color: #2575FC;
+  color: white;
+  border: none;
+  padding: 0.8rem 2.5rem;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: normal;
+  margin: 1.5rem auto 1rem auto;
+  display: block;
+  box-shadow: 0 4px 0 #1560d6;
+  position: relative;
+  top: 0;
+  font-family: 'Trade Winds', cursive;
+}
+
+.car-color-select .select-button:hover {
+  background-color: #2e80fd;
+  transform: scale(1.05);
+}
+
+.car-color-select .select-button:active {
+  top: 4px;
+  box-shadow: 0 0 0 #1560d6;
+}
+
+.car-color-select .select-button:focus {
+  outline: 3px solid #4CAF50;
+  box-shadow: 0 4px 0 #1560d6, 0 0 10px rgba(76, 175, 80, 0.7);
+}
