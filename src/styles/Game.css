@@ -990,3 +990,136 @@ button {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #1560d6;
 }
+
+/* Track map preview in track selection screen */
+.track-select-content {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.track-map-preview {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 3px solid #7400B8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+}
+
+.track-map-preview h3 {
+  color: #7400B8;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.track-map-container {
+  width: 250px;
+  height: 250px;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border: 2px solid #7400B8;
+}
+
+.track-map-container .track-map {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.track-map-container canvas {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(40, 40, 40, 0.1);
+}
+
+.track-details {
+  width: 100%;
+  text-align: center;
+}
+
+.track-details p {
+  margin: 0.5rem 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+/* Adjust track options to fit better with preview */
+.track-options {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .track-select-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .track-options {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Track icon canvas */
+.track-icon-canvas {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(40, 40, 40, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Continue button for track selection */
+.track-map-preview .continue-button {
+  background-color: #7400B8;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  margin-top: 1rem;
+  box-shadow: 0 4px 0 #5A189A;
+  position: relative;
+  top: 0;
+  width: 100%;
+  max-width: 220px;
+}
+
+.track-map-preview .continue-button:hover {
+  background-color: #8819D2;
+  transform: translateY(-2px);
+}
+
+.track-map-preview .continue-button:active {
+  top: 4px;
+  box-shadow: 0 0 0 #5A189A;
+}
+
+.track-map-preview .continue-button:focus {
+  outline: 3px solid #4CAF50;
+  box-shadow: 0 4px 0 #5A189A, 0 0 10px rgba(76, 175, 80, 0.7);
+}
