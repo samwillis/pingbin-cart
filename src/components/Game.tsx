@@ -2,13 +2,18 @@ import { useState, useEffect } from 'react';
 import GameScene from '../scenes/GameScene';
 import Menu from './Menu';
 import '../styles/Game.css';
+import { loadAllTracks } from '../utils/TrackUtils';
 
-type GameState = 'menu' | 'characterSelect' | 'playing' | 'paused' | 'gameOver';
+type GameState = 'menu' | 'characterSelect' | 'trackSelect' | 'playing' | 'paused' | 'gameOver';
 type Character = 'pingbin' | 'bunny';
 
 export const Game = () => {
   const [gameState, setGameState] = useState<GameState>('menu');
   const [selectedCharacter, setSelectedCharacter] = useState<Character>('pingbin');
+  const [selectedTrackId, setSelectedTrackId] = useState('main_track');
+  
+  // Get all available tracks
+  const tracks = loadAllTracks();
   
   const handleStartGame = () => {
     setGameState('characterSelect');
@@ -16,6 +21,11 @@ export const Game = () => {
   
   const handleCharacterSelect = (character: Character) => {
     setSelectedCharacter(character);
+    setGameState('trackSelect');
+  };
+  
+  const handleTrackSelect = (trackId: string) => {
+    setSelectedTrackId(trackId);
     setGameState('playing');
   };
   
@@ -49,7 +59,7 @@ export const Game = () => {
   
   return (
     <div className="game-container">
-      <GameScene character={selectedCharacter} />
+      <GameScene character={selectedCharacter} trackId={selectedTrackId} />
       
       {gameState === 'menu' && (
         <Menu 
@@ -77,6 +87,31 @@ export const Game = () => {
                 <div className="character-image bunny"></div>
                 <span>Bunny</span>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {gameState === 'trackSelect' && (
+        <div className="track-select-overlay">
+          <div className="track-select">
+            <h2>Select Track</h2>
+            <div className="track-options">
+              {tracks.map(track => (
+                <div 
+                  key={track.id}
+                  className={`track-option ${selectedTrackId === track.id ? 'selected' : ''}`}
+                  onClick={() => handleTrackSelect(track.id)}
+                >
+                  <div className="track-image">
+                    <div 
+                      className="track-color" 
+                      style={{ backgroundColor: track.trackColor }}
+                    ></div>
+                  </div>
+                  <span>{track.name}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

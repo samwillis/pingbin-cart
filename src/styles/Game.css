@@ -5,7 +5,7 @@
   overflow: hidden;
 }
 
-.pause-overlay, .character-select-overlay {
+.pause-overlay, .character-select-overlay, .track-select-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -18,7 +18,7 @@
   z-index: 100;
 }
 
-.pause-menu, .character-select {
+.pause-menu, .character-select, .track-select {
   background-color: rgba(25, 25, 25, 0.9);
   padding: 2rem;
   border-radius: 10px;
@@ -28,7 +28,7 @@
   text-align: center;
 }
 
-.pause-menu h2, .character-select h2 {
+.pause-menu h2, .character-select h2, .track-select h2 {
   color: white;
   margin-bottom: 1rem;
   font-size: 2rem;
@@ -125,6 +125,70 @@
 }
 
 .character-option span {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Track Select Styles */
+.track-select {
+  min-width: 500px;
+  max-width: 800px;
+}
+
+.track-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.track-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 150px;
+}
+
+.track-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.track-option.selected {
+  background-color: rgba(74, 143, 231, 0.3);
+  border: 2px solid #4a8fe7;
+}
+
+.track-image {
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.track-color {
+  position: absolute;
+  width: 70%;
+  height: 40%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+}
+
+.track-option span {
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
