@@ -1,7 +1,5 @@
 import { KeyboardEvent as ReactKeyboardEvent, useRef, useState, useEffect } from 'react';
 import { TrackData } from '../../../utils/TrackUtils';
-import TrackMap from '../TrackMap';
-import * as THREE from 'three';
 
 interface TrackSelectScreenProps {
   tracks: TrackData[];
@@ -98,7 +96,7 @@ const TrackIcon = ({ track }: TrackIconProps) => {
     }
   }, [track]);
   
-  return <canvas ref={canvasRef} width={100} height={80} className="track-icon-canvas" />;
+  return <canvas ref={canvasRef} width={140} height={100} className="track-icon-canvas" />;
 };
 
 const TrackSelectScreen = ({ 
@@ -107,14 +105,7 @@ const TrackSelectScreen = ({
   onTrackSelect 
 }: TrackSelectScreenProps) => {
   const trackRefsMap = useRef<Map<string, HTMLDivElement | null>>(new Map());
-  const [selectedTrack, setSelectedTrack] = useState<TrackData | null>(null);
   const [internalSelectedId, setInternalSelectedId] = useState(selectedTrackId);
-  
-  // Update the selected track whenever internalSelectedId changes
-  useEffect(() => {
-    const track = tracks.find(t => t.id === internalSelectedId);
-    setSelectedTrack(track || null);
-  }, [internalSelectedId, tracks]);
   
   // Handle keyboard navigation
   useEffect(() => {
@@ -146,16 +137,10 @@ const TrackSelectScreen = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [internalSelectedId, tracks, onTrackSelect]);
   
-  // Handle selecting a track
-  const handleSelectTrack = (trackId: string) => {
+  // Handle selecting and starting with the track
+  const handleTrackClick = (trackId: string) => {
     setInternalSelectedId(trackId);
-    const trackElement = trackRefsMap.current.get(trackId);
-    if (trackElement) trackElement.focus();
-  };
-  
-  // Handle continue button click
-  const handleContinue = () => {
-    onTrackSelect(internalSelectedId);
+    onTrackSelect(trackId);
   };
   
   return (
@@ -163,60 +148,29 @@ const TrackSelectScreen = ({
       <div className="track-select">
         <h2>Select Track</h2>
         
-        <div className="track-select-content">
-          <div className="track-options">
-            {tracks.map((track, index) => (
-              <div 
-                key={track.id}
-                ref={(el) => {
-                  trackRefsMap.current.set(track.id, el);
-                  if (index === 0) setTimeout(() => el?.focus(), 10);
-                }}
-                className={`track-option ${internalSelectedId === track.id ? 'selected' : ''}`}
-                onClick={() => handleSelectTrack(track.id)}
-                tabIndex={0}
-                onKeyDown={(e: ReactKeyboardEvent) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleSelectTrack(track.id);
-                  }
-                }}
-              >
-                <div className="track-image">
-                  <TrackIcon track={track} />
-                </div>
-                <span>{track.name}</span>
+        <div className="track-options-grid">
+          {tracks.map((track, index) => (
+            <div 
+              key={track.id}
+              ref={(el) => {
+                trackRefsMap.current.set(track.id, el);
+                if (index === 0) setTimeout(() => el?.focus(), 10);
+              }}
+              className={`track-option ${internalSelectedId === track.id ? 'selected' : ''}`}
+              onClick={() => handleTrackClick(track.id)}
+              tabIndex={0}
+              onKeyDown={(e: ReactKeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleTrackClick(track.id);
+                }
+              }}
+            >
+              <div className="track-image">
+                <TrackIcon track={track} />
               </div>
-            ))}
-          </div>
-          
-          {/* Track Map Preview */}
-          {selectedTrack && (
-            <div className="track-map-preview">
-              <h3>Track Preview</h3>
-              <div className="track-map-container">
-                <TrackMap 
-                  trackData={selectedTrack}
-                  playerPosition={new THREE.Vector3(selectedTrack.startPosition.x, 0, selectedTrack.startPosition.z)}
-                  playerRotation={0}
-                />
-              </div>
-              <div className="track-details">
-                <p>Track width: {selectedTrack.width}m</p>
-                <p>Start your engines at the marked position!</p>
-              </div>
-              <button 
-                className="continue-button"
-                onClick={handleContinue}
-                onKeyDown={(e: ReactKeyboardEvent) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleContinue();
-                  }
-                }}
-              >
-                Race This Track!
-              </button>
+              <span>{track.name}</span>
             </div>
-          )}
+          ))}
         </div>
         
         <p className="keyboard-hint">Use ARROW KEYS to navigate, ENTER to select a track</p>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { TrackData } from '../../utils/TrackUtils';
 
@@ -10,6 +10,21 @@ interface TrackMapProps {
 
 const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
   
   // Draw the track map whenever trackData, playerPosition, or playerRotation changes
   useEffect(() => {
@@ -21,6 +36,10 @@ const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) 
     
     // Clear canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Set background to dark gray with transparency
+    context.fillStyle = 'rgba(40, 40, 40, 0.65)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
     
     // Calculate scale to fit the map in the canvas
     const points = trackData.points;
@@ -39,8 +58,8 @@ const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) 
       maxZ = Math.max(maxZ, point.z);
     }
     
-    // Add padding
-    const padding = 20;
+    // Add padding - smaller for mobile
+    const padding = isMobile ? canvas.width * 0.12 : canvas.width * 0.1;
     const width = canvas.width - padding * 2;
     const height = canvas.height - padding * 2;
     
@@ -59,8 +78,10 @@ const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) 
     
     // Draw track path
     context.beginPath();
-    context.strokeStyle = trackData.trackColor || '#555555';
-    context.lineWidth = trackData.width * scale * 0.5 || 10;
+    context.strokeStyle = '#999999'; // Light gray track
+    // Adjust line width for mobile
+    const baseWidth = isMobile ? 0.4 : 0.5;
+    context.lineWidth = trackData.width * scale * baseWidth || (isMobile ? 6 : 10);
     context.lineCap = 'round';
     context.lineJoin = 'round';
     
@@ -95,10 +116,11 @@ const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) 
       context.rotate(-playerRotation + Math.PI);
       
       context.beginPath();
-      context.fillStyle = '#FF4433';
+      // Use a bright red for visibility
+      context.fillStyle = '#FF5F5F';
       
-      // Draw triangle
-      const arrowSize = 8;
+      // Draw triangle - scale for mobile
+      const arrowSize = isMobile ? Math.max(4, canvas.width * 0.05) : 8;
       context.moveTo(0, -arrowSize);
       context.lineTo(-arrowSize / 2, arrowSize / 2);
       context.lineTo(arrowSize / 2, arrowSize / 2);
@@ -113,21 +135,23 @@ const TrackMap = ({ trackData, playerPosition, playerRotation }: TrackMapProps) 
       const startPos = toCanvasCoords(trackData.startPosition.x, trackData.startPosition.z);
       
       context.beginPath();
-      context.fillStyle = '#44FF33';
-      context.arc(startPos.x, startPos.y, 5, 0, Math.PI * 2);
+      // Use a bright green for visibility
+      context.fillStyle = '#5FFF5F';
+      // Scale circle size for mobile
+      const dotSize = isMobile ? Math.max(3, canvas.width * 0.03) : 5;
+      context.arc(startPos.x, startPos.y, dotSize, 0, Math.PI * 2);
       context.fill();
     }
-  }, [trackData, playerPosition, playerRotation]);
+  }, [trackData, playerPosition, playerRotation, isMobile]);
   
   return (
-    <div className="track-map">
-      <canvas 
-        ref={canvasRef} 
-        width={200} 
-        height={200}
-        aria-label="Track Map"
-      />
-    </div>
+    <canvas 
+      ref={canvasRef} 
+      width={200} 
+      height={200}
+      aria-label="Track Map"
+      className="track-map-canvas"
+    />
   );
 };
 

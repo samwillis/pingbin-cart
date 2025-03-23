@@ -531,6 +531,23 @@ export const GameScene = ({
   const [countdown, setCountdown] = useState<number | null>(3);
   const [gameActive, setGameActive] = useState(false);
   const [countdownKey, setCountdownKey] = useState(0); // Key to force animation re-render
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isLandscape, setIsLandscape] = useState<boolean>(false);
+  
+  // Detect mobile and orientation
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   // Use requestAnimationFrame to continuously update map position
   useEffect(() => {
@@ -653,6 +670,22 @@ export const GameScene = ({
     };
   }, [onPause, gameActive]);
 
+  // Update track map canvas classes
+  useEffect(() => {
+    const canvas = document.querySelector('.track-map-canvas');
+    if (canvas) {
+      // Add mobile and landscape classes as needed
+      if (isMobile) canvas.classList.add('mobile');
+      else canvas.classList.remove('mobile');
+      
+      if (isLandscape) canvas.classList.add('landscape');
+      else canvas.classList.remove('landscape');
+      
+      if (countdown !== null) canvas.classList.add('countdown-active');
+      else canvas.classList.remove('countdown-active');
+    }
+  }, [isMobile, isLandscape, countdown]);
+
   return (
     <>
       <Canvas shadows>
@@ -687,13 +720,11 @@ export const GameScene = ({
       
       {/* Track Map UI */}
       {trackData && (
-        <div className={`track-map ${countdown !== null ? 'countdown-active' : ''}`}>
-          <TrackMap 
-            trackData={trackData} 
-            playerPosition={mapPosition} 
-            playerRotation={mapRotation} 
-          />
-        </div>
+        <TrackMap 
+          trackData={trackData} 
+          playerPosition={mapPosition} 
+          playerRotation={mapRotation} 
+        />
       )}
       
       {/* Countdown UI */}
