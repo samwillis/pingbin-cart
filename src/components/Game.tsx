@@ -139,13 +139,13 @@ const RaceCar = ({
       </mesh>
       
       {/* Headlights - right */}
-      <mesh castShadow position={[0.5, 0.6, 1.54]} rotation={[Math.PI/2, 0, 0]}>
+      <mesh castShadow position={[0.53, 0.6, 1.57]} rotation={[Math.PI/2, 0, 0]}>
         <cylinderGeometry args={[0.15, 0.15, 0.1, 16]} />
         <meshStandardMaterial color="#FFFF99" emissive="#FFFF00" emissiveIntensity={0.5} />
       </mesh>
       
       {/* Headlights - left */}
-      <mesh castShadow position={[-0.5, 0.6, 1.54]} rotation={[Math.PI/2, 0, 0]}>
+      <mesh castShadow position={[-0.53, 0.6, 1.57]} rotation={[Math.PI/2, 0, 0]}>
         <cylinderGeometry args={[0.15, 0.15, 0.1, 16]} />
         <meshStandardMaterial color="#FFFF99" emissive="#FFFF00" emissiveIntensity={0.5} />
       </mesh>
