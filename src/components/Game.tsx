@@ -23,6 +23,18 @@ const CharacterPreview = ({
       <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 5]} intensity={0.8} />
       <PerspectiveCamera makeDefault position={[0, 0, 2]} fov={50} />
+      
+      {/* Colorful background */}
+      <mesh position={[0, 0, -1]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[10, 10]} />
+        <meshStandardMaterial 
+          color={character === 'pingbin' ? "#4CC9F0" : "#FF9F9F"} 
+          opacity={0.3}
+          transparent={true}
+        />
+      </mesh>
+      
+      {/* Character model */}
       <group position={[0, -0.5, 0]} rotation={[0, character === 'pingbin' ? -0.2 : 0.2, 0]}>
         {character === 'pingbin' ? (
           <Pingbin position={[0, 0, 0]} disableAnimation={!enableRotation} />
@@ -30,6 +42,27 @@ const CharacterPreview = ({
           <Bunny position={[0, 0, 0]} disableAnimation={!enableRotation} />
         )}
       </group>
+      
+      {/* Add some decorative elements */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <mesh key={i} position={[
+          (Math.random() - 0.5) * 3,
+          (Math.random() - 0.5) * 3,
+          -0.5
+        ]}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial 
+            color={character === 'pingbin' ? 
+              ["#4361EE", "#3A0CA3", "#7209B7", "#4CC9F0"][i % 4] : 
+              ["#FF6B6B", "#FF9E00", "#FF006E", "#FF9F9F"][i % 4]} 
+            emissive={character === 'pingbin' ? 
+              ["#4361EE", "#3A0CA3", "#7209B7", "#4CC9F0"][i % 4] : 
+              ["#FF6B6B", "#FF9E00", "#FF006E", "#FF9F9F"][i % 4]}
+            emissiveIntensity={0.5}
+          />
+        </mesh>
+      ))}
+      
       {enableRotation && (
         <OrbitControls 
           enableZoom={false} 
@@ -39,6 +72,101 @@ const CharacterPreview = ({
           rotateSpeed={0.5}
         />
       )}
+    </Canvas>
+  );
+};
+
+// Race car component
+const RaceCar = ({ 
+  character, 
+  position = [0, 0, 0],
+  rotation = [0, 0, 0]
+}: { 
+  character: Character, 
+  position?: [number, number, number],
+  rotation?: [number, number, number]
+}) => {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Car body - using the same dimensions as the main game */}
+      <mesh castShadow position={[0, 0.5, 0]}>
+        <boxGeometry args={[1.5, 0.5, 3]} />
+        <meshStandardMaterial color={character === 'pingbin' ? "#4361EE" : "#FF6B6B"} />
+      </mesh>
+      
+      {/* Car top */}
+      <mesh castShadow position={[0, 1, -0.2]}>
+        <boxGeometry args={[1.2, 0.4, 1.5]} />
+        <meshStandardMaterial color={character === 'pingbin' ? "#4CC9F0" : "#FF9F9F"} />
+      </mesh>
+      
+      {/* Wheels - using the same style as the main game */}
+      <mesh castShadow position={[0.8, 0.3, 1]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
+        <meshStandardMaterial color="#241f31" />
+      </mesh>
+      <mesh castShadow position={[-0.8, 0.3, 1]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
+        <meshStandardMaterial color="#241f31" />
+      </mesh>
+      <mesh castShadow position={[0.8, 0.3, -1]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
+        <meshStandardMaterial color="#241f31" />
+      </mesh>
+      <mesh castShadow position={[-0.8, 0.3, -1]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
+        <meshStandardMaterial color="#241f31" />
+      </mesh>
+      
+      {/* Character */}
+      <group position={[0, 1.5, -0.2]} scale={[0.8, 0.8, 0.8]}>
+        {character === 'pingbin' ? (
+          <Pingbin position={[0, 0, 0]} disableAnimation={false} />
+        ) : (
+          <Bunny position={[0, 0, 0]} disableAnimation={false} />
+        )}
+      </group>
+    </group>
+  );
+};
+
+// Welcome screen with characters in cars
+const WelcomeScreen = () => {
+  return (
+    <Canvas className="welcome-canvas">
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <PerspectiveCamera makeDefault position={[0, 3, 8]} fov={60} />
+      
+      {/* Checkered floor */}
+      <mesh rotation={[-Math.PI/2, 0, 0]} position={[0, -0.5, 0]}>
+        <planeGeometry args={[40, 40, 40, 40]} />
+        <meshStandardMaterial 
+          color="white" 
+          wireframe={true}
+          opacity={0.3}
+          transparent={true}
+        />
+      </mesh>
+      
+      {/* Race track-like ground */}
+      <mesh rotation={[-Math.PI/2, 0, 0]} position={[0, -0.49, 0]} receiveShadow>
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color="#3d3d3d" />
+      </mesh>
+      
+      {/* Characters in their cars */}
+      <RaceCar character="pingbin" position={[-2.5, 0, 0]} rotation={[0, Math.PI/8, 0]} />
+      <RaceCar character="bunny" position={[2.5, 0, 1]} rotation={[0, -Math.PI/8, 0]} />
+      
+      <OrbitControls 
+        enableZoom={false} 
+        enablePan={false}
+        autoRotate 
+        autoRotateSpeed={1}
+        maxPolarAngle={Math.PI/2.2}
+        minPolarAngle={Math.PI/3}
+      />
     </Canvas>
   );
 };
@@ -158,8 +286,14 @@ function Game() {
       {gameState === 'start' && (
         <div className="start-screen-overlay">
           <div className="start-screen">
-            <h1>Welcome to Pingbin Cart!</h1>
+            <div className="game-title">
+              <h2>Welcome to</h2>
+              <h1>Pingbin Cart!</h1>
+            </div>
             <p>Race around exciting tracks with Pingbin and Bunny!</p>
+            <div className="welcome-preview">
+              <WelcomeScreen />
+            </div>
             <p className="keyboard-hint">Press ENTER or SPACE to start</p>
             <button 
               onClick={handleStartGame}

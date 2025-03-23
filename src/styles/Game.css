@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
 }
 
 .pause-overlay, .character-select-overlay, .track-select-overlay {
@@ -224,7 +225,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -232,46 +233,100 @@
 }
 
 .start-screen {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   text-align: center;
-  max-width: 500px;
-  color: white;
+  max-width: 600px;
+  transform: rotate(-2deg);
+  border: 5px dashed #ff6b6b;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(-2deg) translateY(-10px); }
 }
 
 .start-screen h1 {
-  font-size: 2.5rem;
+  color: #ff6b6b;
+  font-size: 3rem;
   margin-bottom: 1rem;
-  color: #4CAF50;
+  text-shadow: 3px 3px 0 #ffe66d;
+}
+
+.game-title {
+  margin-bottom: 1.5rem;
+}
+
+.game-title h2 {
+  color: #4361EE;
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  text-shadow: 2px 2px 0 #B5DEFF;
+}
+
+.game-title h1 {
+  color: #ff6b6b;
+  font-size: 4rem;
+  margin: 0;
+  text-shadow: 4px 4px 0 #ffe66d;
+  letter-spacing: 1px;
+  transform: rotate(-2deg);
+  line-height: 1.2;
 }
 
 .start-screen p {
-  margin-bottom: 1.5rem;
+  color: #333;
   font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-preview {
+  height: 250px;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 3px solid #ffe66d;
+}
+
+.welcome-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .start-screen button {
-  background-color: #4CAF50;
+  background-color: #ff6b6b;
   color: white;
   border: none;
   padding: 1rem 2rem;
   font-size: 1.5rem;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  font-weight: bold;
+  box-shadow: 0 5px 0 #e63946;
+  position: relative;
+  top: 0;
 }
 
-.start-screen button:hover,
-.start-screen button:focus {
-  background-color: #45a049;
-  outline: 2px solid white;
+.start-screen button:hover {
+  background-color: #ff8585;
+  transform: scale(1.05);
+}
+
+.start-screen button:active {
+  top: 5px;
+  box-shadow: 0 0 0 #e63946;
 }
 
 /* Keyboard navigation hints */
 .keyboard-hint {
+  color: #666;
   font-size: 0.9rem;
-  color: #aaa;
   margin-top: 1rem;
   font-style: italic;
 }
@@ -320,6 +375,7 @@
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
   border: 5px solid #4CAF50;
   box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+  font-family: 'Trade Winds', cursive;
 }
 
 .countdown:empty::before {
@@ -328,6 +384,7 @@
   animation: go-animation 0.5s ease-in-out;
   font-size: 7rem;
   text-shadow: 0 0 25px #4CAF50;
+  font-family: 'Trade Winds', cursive;
 }
 
 @keyframes countdown-pulse {
@@ -364,4 +421,286 @@
 /* Remove the old character image styles that used background images */
 .character-image {
   display: none;
+}
+
+/* Character Select Screen */
+.character-select-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #85FFBD, #FFFB7D);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.character-select {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 800px;
+  border: 5px solid #4CC9F0;
+}
+
+.character-select h2 {
+  color: #4361EE;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 #B5DEFF;
+}
+
+.character-options {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.character-option {
+  background-color: #F8EDEB;
+  border-radius: 15px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 200px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.character-option:hover {
+  transform: translateY(-10px);
+}
+
+.character-option.selected {
+  background-color: #FCD5CE;
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 3px solid #FF8FA3;
+}
+
+.character-preview {
+  height: 200px;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.character-preview-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.character-option span {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Track Select Screen */
+.track-select-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #A9C9FF, #FFBBEC);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.track-select {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 800px;
+  border: 5px solid #7400B8;
+}
+
+.track-select h2 {
+  color: #7400B8;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 #E0AAFF;
+}
+
+.track-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.track-option {
+  background-color: #F8F9FA;
+  border-radius: 15px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 160px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.track-option:hover {
+  transform: translateY(-8px);
+}
+
+.track-option.selected {
+  background-color: #E0AAFF;
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 3px solid #7400B8;
+}
+
+.track-image {
+  height: 120px;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.track-color {
+  height: 80%;
+  width: 80%;
+  border-radius: 8px;
+}
+
+.track-option span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Pause Menu */
+.pause-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.pause-menu, .settings-menu {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  border: 5px solid #2ec4b6;
+  transform: rotate(1deg);
+}
+
+.pause-menu h2, .settings-menu h2 {
+  color: #2ec4b6;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 #cbf3f0;
+}
+
+.pause-menu button, .settings-menu button {
+  background-color: #2ec4b6;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 0 #1a8a80;
+  position: relative;
+  top: 0;
+}
+
+.pause-menu button:hover, .settings-menu button:hover {
+  background-color: #3dd1c4;
+  transform: scale(1.05);
+}
+
+.pause-menu button:active, .settings-menu button:active {
+  top: 4px;
+  box-shadow: 0 0 0 #1a8a80;
+}
+
+/* Settings Menu */
+.setting-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.setting-option label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.setting-option input[type="checkbox"] {
+  transform: scale(1.5);
+  margin-left: 1rem;
+}
+
+/* Headings with Trade Winds font */
+h1, h2, h3, .game-title h1, .game-title h2, 
+.character-select h2, .track-select h2, 
+.pause-menu h2, .settings-menu h2, 
+.character-option span, .track-option span,
+button {
+  font-family: 'Trade Winds', cursive;
+  font-weight: normal;
+}
+
+/* Adjust font size for buttons to work better with Trade Winds */
+.start-screen button,
+.pause-menu button,
+.settings-menu button {
+  font-size: 1.4rem;
+  padding: 0.9rem 1.8rem;
+  letter-spacing: 1px;
+}
+
+.character-option span,
+.track-option span {
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+
+.character-select h2,
+.track-select h2,
+.pause-menu h2,
+.settings-menu h2 {
+  font-size: 2.3rem;
+  letter-spacing: 1px;
+  line-height: 1.2;
 } 
