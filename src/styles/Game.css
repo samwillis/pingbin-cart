@@ -309,4 +309,74 @@
 .start-screen button:focus {
   outline: 3px solid #4CAF50;
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+}
+
+/* Countdown overlay */
+.countdown-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.countdown {
+  font-size: 8rem;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: countdown-pulse 0.5s ease-in-out;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+  border: 5px solid #4CAF50;
+  box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+}
+
+.countdown:empty::before {
+  content: "GO!";
+  color: #4CAF50;
+  animation: go-animation 0.5s ease-in-out;
+  font-size: 7rem;
+  text-shadow: 0 0 25px #4CAF50;
+}
+
+@keyframes countdown-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes go-animation {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 } 

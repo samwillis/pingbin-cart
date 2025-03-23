@@ -284,19 +284,19 @@ const Vehicle = ({
       </mesh>
       
       {/* Wheels */}
-      <mesh castShadow position={[0.8, 0.3, 1]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh castShadow position={[0.8, 0.3, 1]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#241f31" />
       </mesh>
-      <mesh castShadow position={[-0.8, 0.3, 1]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh castShadow position={[-0.8, 0.3, 1]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#241f31" />
       </mesh>
-      <mesh castShadow position={[0.8, 0.3, -1]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh castShadow position={[0.8, 0.3, -1]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#241f31" />
       </mesh>
-      <mesh castShadow position={[-0.8, 0.3, -1]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh castShadow position={[-0.8, 0.3, -1]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#241f31" />
       </mesh>
@@ -387,6 +387,36 @@ export const GameScene = ({
     left: false,
     right: false
   });
+  const [countdown, setCountdown] = useState<number | null>(3);
+  const [gameActive, setGameActive] = useState(false);
+  const [countdownKey, setCountdownKey] = useState(0); // Key to force animation re-render
+  
+  // Countdown timer
+  useEffect(() => {
+    if (countdown === null) return;
+    
+    if (countdown > 0) {
+      // Trigger animation by changing the key
+      setCountdownKey(prev => prev + 1);
+      
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    } else if (countdown === 0) {
+      // Show "GO!" for 1 second, then start the game
+      // Trigger animation for "GO!"
+      setCountdownKey(prev => prev + 1);
+      
+      const timer = setTimeout(() => {
+        setCountdown(null);
+        setGameActive(true);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
   
   // Handler for vehicle position updates
   const handlePositionChange = (position: THREE.Vector3, rotation: number) => {
@@ -396,6 +426,8 @@ export const GameScene = ({
   
   // Handler for touch controls
   const handleTouchControl = (control: string, isPressed: boolean) => {
+    if (!gameActive) return; // Ignore controls until countdown is finished
+    
     setControls(prev => {
       switch (control) {
         case 'forward':
@@ -415,6 +447,8 @@ export const GameScene = ({
   // Set up keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!gameActive) return; // Ignore controls until countdown is finished
+      
       if (e.key === 'ArrowUp' || e.key === 'w') {
         setControls(prev => ({ ...prev, forward: true }));
       }
@@ -433,6 +467,8 @@ export const GameScene = ({
     };
     
     const handleKeyUp = (e: KeyboardEvent) => {
+      if (!gameActive) return; // Ignore controls until countdown is finished
+      
       if (e.key === 'ArrowUp' || e.key === 'w') {
         setControls(prev => ({ ...prev, forward: false }));
       }
@@ -454,7 +490,7 @@ export const GameScene = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [onPause]);
+  }, [onPause, gameActive]);
 
   return (
     <>
@@ -466,12 +502,21 @@ export const GameScene = ({
         <Track trackId={trackId} />
         <Vehicle 
           position={[startPos.x, startPos.y, startPos.z]} 
-          controls={controls}
+          controls={gameActive ? controls : { forward: false, backward: false, left: false, right: false }}
           character={character}
           trackId={trackId}
           onPositionChange={handlePositionChange}
         />
       </Canvas>
+      
+      {/* Countdown UI */}
+      {countdown !== null && (
+        <div className="countdown-overlay">
+          <div key={countdownKey} className="countdown">
+            {countdown > 0 ? countdown : ""}
+          </div>
+        </div>
+      )}
       
       {/* Touch controls for mobile/tablet devices, only if enabled */}
       {showTouchControls && <TouchControls onControlChange={handleTouchControl} />}
