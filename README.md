@@ -6,7 +6,7 @@ A fun 3D racing game built with React, Three.js, and React Three Fiber. Race aro
 
 ## 🎮 Play Now
 
-You can play the game online at: [https://[your-username].github.io/pingbin-cart/](https://[your-username].github.io/pingbin-cart/)
+You can play the game online at: [https://samwillis.uk/pingbin-cart/](https://samwillis.uk/pingbin-cart/)
 
 ## ✨ Features
 
@@ -30,7 +30,7 @@ You can play the game online at: [https://[your-username].github.io/pingbin-cart
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/[your-username]/pingbin-cart.git
+   git clone https://github.com/samwillis/pingbin-cart.git
    cd pingbin-cart
    ```
 

@@ -25,8 +25,61 @@ function Game() {
   // Check if the device is mobile/tablet on initial load
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobileDevice = /iphone|ipad|ipod|android|blackberry|windows phone/.test(userAgent);
-    setShowTouchControls(isMobileDevice || window.innerWidth <= 1024);
+    
+    // More specific detection for iOS and Android
+    const isIOS = /iphone|ipad|ipod/.test(userAgent) || 
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // Modern iPads
+    const isAndroid = /android/.test(userAgent);
+    const isOtherMobile = /blackberry|windows phone|mobile/.test(userAgent);
+    
+    // If it's iOS or Android, definitely enable touch controls
+    if (isIOS || isAndroid) {
+      console.log(`Mobile device detected: ${isIOS ? 'iOS' : 'Android'}`);
+      setShowTouchControls(true);
+    } 
+    // Otherwise check screen size as a fallback
+    else if (isOtherMobile || window.innerWidth <= 1024) {
+      console.log('Other mobile device or small screen detected');
+      setShowTouchControls(true);
+    } else {
+      console.log('Desktop device detected');
+      setShowTouchControls(false);
+    }
+    
+    // Also detect touch capability as another signal
+    const isTouchCapable = 'ontouchstart' in window || 
+                          navigator.maxTouchPoints > 0;
+    
+    if (isTouchCapable && !isIOS && !isAndroid && !isOtherMobile) {
+      console.log('Touch-capable device detected');
+      setShowTouchControls(true);
+    }
+  }, []);
+
+  // Detect orientation changes and other device state changes
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      // Re-run device detection if necessary
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isIOS = /iphone|ipad|ipod/.test(userAgent) || 
+                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isAndroid = /android/.test(userAgent);
+      
+      if (isIOS || isAndroid) {
+        // For mobile devices, always ensure touch controls are enabled after orientation change
+        setShowTouchControls(true);
+        console.log('Orientation changed: ensuring touch controls are enabled for mobile device');
+      }
+    };
+    
+    // Listen for orientation changes
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', handleOrientationChange);
+    
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange);
+      window.removeEventListener('resize', handleOrientationChange);
+    };
   }, []);
 
   // Handle start game
