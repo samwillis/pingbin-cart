@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Sky } from '@react-three/drei';
+import { PerspectiveCamera, Sky } from '@react-three/drei';
 import * as THREE from 'three';
 import { Pingbin, Bunny } from '../models/Characters';
 import { 
   loadTrack, 
-  createTrackCurve,
-  point3DToVector3
+  createTrackCurve
 } from '../utils/TrackUtils';
 import TouchControls from '../components/TouchControls';
 import TrackMap from '../components/game/TrackMap';
@@ -224,11 +223,9 @@ const Vehicle = ({
     const newPosZ = meshRef.current.position.z + Math.cos(rotation) * velocity;
     
     // Check if the new position is on the track
-    const currentPos = new THREE.Vector3(meshRef.current.position.x, 0, meshRef.current.position.z);
     const newPos = new THREE.Vector3(newPosX, 0, newPosZ);
     
     // Find closest point on track curve to the new position
-    const closestPoint = new THREE.Vector3();
     const closestPointOnCurve = trackCurve.getPointAt(
       trackCurve.getUtoTmapping(trackCurve.getPoint(0).distanceTo(newPos) / 1000, 0)
     );
@@ -553,7 +550,7 @@ export const GameScene = ({
     return () => {
       cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [mapPosition, mapRotation]);
   
   // Countdown timer
   useEffect(() => {

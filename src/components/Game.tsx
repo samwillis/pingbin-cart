@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GameScene } from '../scenes/GameScene';
 import { loadAllTracks } from '../utils/TrackUtils';
 import '../styles/Game.css';
@@ -10,7 +10,7 @@ import CarColorSelectScreen from './game/screens/CarColorSelectScreen';
 import TrackSelectScreen from './game/screens/TrackSelectScreen';
 import PauseScreen from './game/screens/PauseScreen';
 import SettingsScreen from './game/screens/SettingsScreen';
-import { GameState, Character, CAR_COLORS } from './game/GameTypes';
+import { GameState, Character } from './game/GameTypes';
 
 function Game() {
   const [gameState, setGameState] = useState<GameState>('start');
@@ -30,10 +30,10 @@ function Game() {
   }, []);
 
   // Handle start game
-  const handleStartGame = () => {
+  const handleStartGame = useCallback(() => {
     setPreviousState(gameState);
     setGameState('character_select');
-  };
+  }, [gameState]);
 
   // Handle settings from start screen
   const handleStartScreenSettings = () => {
@@ -42,21 +42,21 @@ function Game() {
   };
 
   // Handle character selection
-  const handleCharacterSelect = (character: Character) => {
+  const handleSelectCharacter = (character: Character) => {
     setSelectedCharacter(character);
     setPreviousState(gameState);
     setGameState('car_color_select');
   };
 
   // Handle car color selection
-  const handleCarColorSelect = (color: string) => {
-    setSelectedCarColor(color);
+  const handleSelectCarColor = (carColor: string) => {
+    setSelectedCarColor(carColor);
     setPreviousState(gameState);
     setGameState('track_select');
   };
 
   // Handle track selection
-  const handleTrackSelect = (trackId: string) => {
+  const handleSelectTrack = (trackId: string) => {
     setSelectedTrackId(trackId);
     setPreviousState(gameState);
     setGameState('playing');
@@ -71,15 +71,15 @@ function Game() {
   };
 
   // Handle resume
-  const handleResume = () => {
+  const handleResume = useCallback(() => {
     if (gameState === 'paused') {
       setPreviousState(gameState);
       setGameState('playing');
     }
-  };
+  }, [gameState]);
 
   // Handle settings toggle
-  const handleSettings = () => {
+  const handleSettings = useCallback(() => {
     if (gameState === 'paused') {
       setPreviousState(gameState);
       setGameState('settings');
@@ -87,13 +87,13 @@ function Game() {
       setPreviousState(gameState);
       setGameState('paused');
     }
-  };
+  }, [gameState]);
 
   // Handle main menu
-  const handleMainMenu = () => {
+  const handleMainMenu = useCallback(() => {
     setPreviousState(gameState);
-    setGameState('character_select');
-  };
+    setGameState('start');
+  }, [gameState]);
 
   // Setup keyboard navigation
   useEffect(() => {
@@ -115,7 +115,7 @@ function Game() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState]);
+  }, [gameState, handleStartGame, handleResume, handleSettings, handleMainMenu]);
 
   return (
     <div className="game-container">
@@ -157,7 +157,7 @@ function Game() {
       {gameState === 'character_select' && (
         <CharacterSelectScreen 
           selectedCharacter={selectedCharacter}
-          onCharacterSelect={handleCharacterSelect}
+          onCharacterSelect={handleSelectCharacter}
         />
       )}
 
@@ -165,7 +165,7 @@ function Game() {
         <TrackSelectScreen 
           tracks={tracks}
           selectedTrackId={selectedTrackId}
-          onTrackSelect={handleTrackSelect}
+          onTrackSelect={handleSelectTrack}
         />
       )}
 
@@ -173,8 +173,8 @@ function Game() {
         <CarColorSelectScreen 
           selectedCharacter={selectedCharacter}
           selectedCarColor={selectedCarColor}
-          setSelectedCarColor={setSelectedCarColor}
-          onCarColorSelect={handleCarColorSelect}
+          setSelectedCarColor={handleSelectCarColor}
+          onCarColorSelect={handleSelectCarColor}
         />
       )}
     </div>
