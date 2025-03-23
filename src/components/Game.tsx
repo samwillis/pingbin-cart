@@ -2,10 +2,46 @@ import { useState, useEffect, KeyboardEvent as ReactKeyboardEvent, useRef } from
 import { GameScene } from '../scenes/GameScene';
 import { loadAllTracks } from '../utils/TrackUtils';
 import '../styles/Game.css';
+import { Canvas } from '@react-three/fiber';
+import { Pingbin, Bunny } from '../models/Characters';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 // Game states
 type GameState = 'start' | 'character_select' | 'track_select' | 'playing' | 'paused' | 'settings';
 type Character = 'pingbin' | 'bunny';
+
+// Character preview component for selection screen
+const CharacterPreview = ({ 
+  character, 
+  enableRotation = false 
+}: { 
+  character: Character, 
+  enableRotation?: boolean 
+}) => {
+  return (
+    <Canvas className="character-preview-canvas">
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[10, 10, 5]} intensity={0.8} />
+      <PerspectiveCamera makeDefault position={[0, 0, 2]} fov={50} />
+      <group position={[0, -0.5, 0]} rotation={[0, character === 'pingbin' ? -0.2 : 0.2, 0]}>
+        {character === 'pingbin' ? (
+          <Pingbin position={[0, 0, 0]} disableAnimation={!enableRotation} />
+        ) : (
+          <Bunny position={[0, 0, 0]} disableAnimation={!enableRotation} />
+        )}
+      </group>
+      {enableRotation && (
+        <OrbitControls 
+          enableZoom={false} 
+          enablePan={false}
+          autoRotate 
+          autoRotateSpeed={2} 
+          rotateSpeed={0.5}
+        />
+      )}
+    </Canvas>
+  );
+};
 
 function Game() {
   const [gameState, setGameState] = useState<GameState>('start');
@@ -265,7 +301,9 @@ function Game() {
                 }}
                 autoFocus
               >
-                <div className="character-image pingbin"></div>
+                <div className="character-preview">
+                  <CharacterPreview character="pingbin" enableRotation={false} />
+                </div>
                 <span>Pingbin</span>
               </div>
               <div 
@@ -279,7 +317,9 @@ function Game() {
                   }
                 }}
               >
-                <div className="character-image bunny"></div>
+                <div className="character-preview">
+                  <CharacterPreview character="bunny" enableRotation={false} />
+                </div>
                 <span>Bunny</span>
               </div>
             </div>
