@@ -841,3 +841,152 @@ button {
   outline: 3px solid #4CAF50;
   box-shadow: 0 4px 0 #1560d6, 0 0 10px rgba(76, 175, 80, 0.7);
 }
+
+/* Track Map */
+.track-map {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.track-map canvas {
+  background-color: rgba(40, 40, 40, 0.8);
+  border-radius: 5px;
+  width: 200px;
+  height: 200px;
+}
+
+/* Hide map during countdown */
+.countdown-active .track-map {
+  opacity: 0.2;
+}
+
+/* Start screen buttons layout */
+.start-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.start-button {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  box-shadow: 0 5px 0 #e63946;
+  position: relative;
+  top: 0;
+}
+
+.start-button:hover {
+  background-color: #ff8585;
+  transform: scale(1.05);
+}
+
+.start-button:active {
+  top: 5px;
+  box-shadow: 0 0 0 #e63946;
+}
+
+.settings-button {
+  background-color: #4361EE;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  box-shadow: 0 5px 0 #3A0CA3;
+  position: relative;
+  top: 0;
+}
+
+.settings-button:hover {
+  background-color: #5E78FF;
+  transform: scale(1.05);
+}
+
+.settings-button:active {
+  top: 5px;
+  box-shadow: 0 0 0 #3A0CA3;
+}
+
+/* Pause button */
+.pause-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pause-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.pause-button:active {
+  transform: scale(0.95);
+}
+
+.pause-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Settings menu buttons */
+.settings-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.settings-menu button {
+  background-color: #4361EE;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+  margin-top: 20px;
+  box-shadow: 0 4px 0 #1560d6;
+}
+
+.settings-menu button:hover {
+  background-color: #5E78FF;
+  transform: translateY(-2px);
+}
+
+.settings-menu button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #1560d6;
+}

@@ -9,6 +9,7 @@ import {
   point3DToVector3
 } from '../utils/TrackUtils';
 import TouchControls from '../components/TouchControls';
+import TrackMap from '../components/game/TrackMap';
 
 // Track component for the racing circuit
 const Track = ({ trackId = 'main_track' }: { trackId?: string }) => {
@@ -267,7 +268,7 @@ const Vehicle = ({
     // Update rotation
     meshRef.current.rotation.y = rotation;
     
-    // Notify about position and rotation changes
+    // Always notify about position and rotation changes, even when not moving or turning
     onPositionChange(meshRef.current.position, rotation);
   });
   
@@ -520,7 +521,10 @@ export const GameScene = ({
   const startPos = trackData?.startPosition || { x: 0, y: 0, z: -45 };
   
   const playerPosition = useRef(new THREE.Vector3(startPos.x, 0, startPos.z));
-  const [playerRotation, setPlayerRotation] = useState(0);
+  const playerRotation = useRef(0);
+  // Add state variables for the map display
+  const [mapPosition, setMapPosition] = useState(new THREE.Vector3(startPos.x, 0, startPos.z));
+  const [mapRotation, setMapRotation] = useState(0);
   const [controls, setControls] = useState({
     forward: false,
     backward: false,
@@ -530,6 +534,26 @@ export const GameScene = ({
   const [countdown, setCountdown] = useState<number | null>(3);
   const [gameActive, setGameActive] = useState(false);
   const [countdownKey, setCountdownKey] = useState(0); // Key to force animation re-render
+  
+  // Use requestAnimationFrame to continuously update map position
+  useEffect(() => {
+    let frameId: number;
+    
+    const updateMapPosition = () => {
+      // Only update if the values have changed to avoid unnecessary renders
+      if (!mapPosition.equals(playerPosition.current) || mapRotation !== playerRotation.current) {
+        setMapPosition(playerPosition.current.clone());
+        setMapRotation(playerRotation.current);
+      }
+      frameId = requestAnimationFrame(updateMapPosition);
+    };
+    
+    frameId = requestAnimationFrame(updateMapPosition);
+    
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
   
   // Countdown timer
   useEffect(() => {
@@ -561,7 +585,7 @@ export const GameScene = ({
   // Handler for vehicle position updates
   const handlePositionChange = (position: THREE.Vector3, rotation: number) => {
     playerPosition.current.copy(position);
-    setPlayerRotation(rotation);
+    playerRotation.current = rotation;
   };
   
   // Handler for touch controls
@@ -636,7 +660,7 @@ export const GameScene = ({
     <>
       <Canvas shadows>
         <PerspectiveCamera makeDefault position={[0, 5, -10]} fov={75} />
-        <FollowCamera target={playerPosition.current} rotation={playerRotation} />
+        <FollowCamera target={playerPosition.current} rotation={playerRotation.current} />
         <Environment />
         <CheckeredGround />
         <Track trackId={trackId} />
@@ -650,11 +674,36 @@ export const GameScene = ({
         />
       </Canvas>
       
+      {/* Pause button */}
+      {gameActive && (
+        <button 
+          className="pause-button"
+          onClick={onPause}
+          aria-label="Pause Game"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <rect x="6" y="4" width="4" height="16" fill="white" />
+            <rect x="14" y="4" width="4" height="16" fill="white" />
+          </svg>
+        </button>
+      )}
+      
+      {/* Track Map UI */}
+      {trackData && (
+        <div className={`track-map ${countdown !== null ? 'countdown-active' : ''}`}>
+          <TrackMap 
+            trackData={trackData} 
+            playerPosition={mapPosition} 
+            playerRotation={mapRotation} 
+          />
+        </div>
+      )}
+      
       {/* Countdown UI */}
       {countdown !== null && (
         <div className="countdown-overlay">
           <div key={countdownKey} className="countdown">
-            {countdown > 0 ? countdown : ""}
+            {countdown > 0 ? countdown : "GO!"}
           </div>
         </div>
       )}

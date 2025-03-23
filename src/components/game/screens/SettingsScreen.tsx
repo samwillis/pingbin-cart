@@ -4,12 +4,16 @@ interface SettingsScreenProps {
   showTouchControls: boolean;
   setShowTouchControls: (show: boolean) => void;
   onBack: () => void;
+  isFromPause?: boolean;
+  onMainMenu?: () => void;
 }
 
 const SettingsScreen = ({ 
   showTouchControls, 
   setShowTouchControls, 
-  onBack 
+  onBack,
+  isFromPause = true,
+  onMainMenu 
 }: SettingsScreenProps) => {
   return (
     <div className="pause-overlay">
@@ -35,16 +39,31 @@ const SettingsScreen = ({
             autoFocus
           />
         </div>
-        <button 
-          onClick={onBack}
-          onKeyDown={(e: ReactKeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onBack();
-            }
-          }}
-        >
-          Back
-        </button>
+        <div className="settings-buttons">
+          <button 
+            onClick={onBack}
+            onKeyDown={(e: ReactKeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onBack();
+              }
+            }}
+          >
+            {isFromPause ? 'Back to Game' : 'Back to Main Menu'}
+          </button>
+          
+          {isFromPause && onMainMenu && (
+            <button 
+              onClick={onMainMenu}
+              onKeyDown={(e: ReactKeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onMainMenu();
+                }
+              }}
+            >
+              Main Menu
+            </button>
+          )}
+        </div>
         <p className="keyboard-hint">ESC to go back</p>
       </div>
     </div>

@@ -14,6 +14,7 @@ import { GameState, Character, CAR_COLORS } from './game/GameTypes';
 
 function Game() {
   const [gameState, setGameState] = useState<GameState>('start');
+  const [previousState, setPreviousState] = useState<GameState>('start');
   const [selectedCharacter, setSelectedCharacter] = useState<Character>('pingbin');
   const [selectedTrackId, setSelectedTrackId] = useState('main_track');
   const [selectedCarColor, setSelectedCarColor] = useState('#4361EE');
@@ -30,30 +31,41 @@ function Game() {
 
   // Handle start game
   const handleStartGame = () => {
+    setPreviousState(gameState);
     setGameState('character_select');
+  };
+
+  // Handle settings from start screen
+  const handleStartScreenSettings = () => {
+    setPreviousState(gameState);
+    setGameState('settings');
   };
 
   // Handle character selection
   const handleCharacterSelect = (character: Character) => {
     setSelectedCharacter(character);
+    setPreviousState(gameState);
     setGameState('car_color_select');
   };
 
   // Handle car color selection
   const handleCarColorSelect = (color: string) => {
     setSelectedCarColor(color);
+    setPreviousState(gameState);
     setGameState('track_select');
   };
 
   // Handle track selection
   const handleTrackSelect = (trackId: string) => {
     setSelectedTrackId(trackId);
+    setPreviousState(gameState);
     setGameState('playing');
   };
 
   // Handle pause
   const handlePause = () => {
     if (gameState === 'playing') {
+      setPreviousState(gameState);
       setGameState('paused');
     }
   };
@@ -61,6 +73,7 @@ function Game() {
   // Handle resume
   const handleResume = () => {
     if (gameState === 'paused') {
+      setPreviousState(gameState);
       setGameState('playing');
     }
   };
@@ -68,14 +81,17 @@ function Game() {
   // Handle settings toggle
   const handleSettings = () => {
     if (gameState === 'paused') {
+      setPreviousState(gameState);
       setGameState('settings');
     } else if (gameState === 'settings') {
+      setPreviousState(gameState);
       setGameState('paused');
     }
   };
 
   // Handle main menu
   const handleMainMenu = () => {
+    setPreviousState(gameState);
     setGameState('character_select');
   };
 
@@ -104,7 +120,10 @@ function Game() {
   return (
     <div className="game-container">
       {gameState === 'start' && (
-        <StartScreen onStartGame={handleStartGame} />
+        <StartScreen 
+          onStartGame={handleStartGame} 
+          onSettings={handleStartScreenSettings}
+        />
       )}
 
       {gameState === 'playing' && (
@@ -130,6 +149,8 @@ function Game() {
           showTouchControls={showTouchControls}
           setShowTouchControls={setShowTouchControls}
           onBack={handleSettings}
+          isFromPause={gameState === 'settings' && previousState === 'paused'}
+          onMainMenu={handleMainMenu}
         />
       )}
 

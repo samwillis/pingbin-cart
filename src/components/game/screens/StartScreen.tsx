@@ -3,9 +3,10 @@ import WelcomeScreen from '../WelcomeScreen';
 
 interface StartScreenProps {
   onStartGame: () => void;
+  onSettings: () => void;
 }
 
-const StartScreen = ({ onStartGame }: StartScreenProps) => {
+const StartScreen = ({ onStartGame, onSettings }: StartScreenProps) => {
   return (
     <div className="start-screen-overlay">
       <div className="start-screen">
@@ -18,17 +19,31 @@ const StartScreen = ({ onStartGame }: StartScreenProps) => {
           <WelcomeScreen />
         </div>
         <p className="keyboard-hint">Press ENTER or SPACE to start</p>
-        <button 
-          onClick={onStartGame}
-          onKeyDown={(e: ReactKeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onStartGame();
-            }
-          }}
-          autoFocus
-        >
-          Start Game
-        </button>
+        <div className="start-buttons">
+          <button 
+            className="start-button"
+            onClick={onStartGame}
+            onKeyDown={(e: ReactKeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onStartGame();
+              }
+            }}
+            autoFocus
+          >
+            Start Game
+          </button>
+          <button 
+            className="settings-button"
+            onClick={onSettings}
+            onKeyDown={(e: ReactKeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onSettings();
+              }
+            }}
+          >
+            Settings
+          </button>
+        </div>
       </div>
     </div>
   );
